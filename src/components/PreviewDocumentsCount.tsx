@@ -7,7 +7,9 @@ export default function PreviewDocumentsCount() {
   const data = usePreview(null, query)
   return (
     <>
-      <div> preview mode active </div>
+      <div>
+        preview mode active
+      </div>
       <DocumentsCount data={data} />
     </>
   )

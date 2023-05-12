@@ -8,17 +8,24 @@ import PreviewDocumentsCount from '@/components/PreviewDocumentsCount'
 // Enable NextJS to cache and dedupe queries
 const clientFetch = cache(client.fetch.bind(client))
 
-export default async function IndexPage() {
+interface IndexPageParams {
+  params: {
+    slug: string
+  }
+}
+
+export default async function IndexPage({ params }: IndexPageParams) {
   const { isEnabled } = draftMode()
 
   if (isEnabled) {
     return (
-      <PreviewSuspense fallback="Loading...">
-        <PreviewDocumentsCount />
-      </PreviewSuspense>
+      <PreviewDocumentsCount />
     )
   }
 
   const data = await clientFetch(query)
   return <DocumentsCount data={data} />
 }
+
+
+
