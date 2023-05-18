@@ -8,3 +8,4 @@ function onPublicAccessOnly() {
 if (!projectId || !dataset) throw new Error(`Project ID or Dataset environment varialbles are undefined`)
 
 export const usePreview = definePreview({ projectId, dataset, onPublicAccessOnly })
+

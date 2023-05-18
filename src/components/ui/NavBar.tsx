@@ -1,37 +1,37 @@
-import { GiAstronautHelmet } from 'react-icons/gi'
 import Link from 'next/link'
-import { client } from '@/lib/sanity.client'
+import Image from 'next/image'
+import { client, urlFor } from '@/lib/sanity.client'
+import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import post from '../../../sanity/schemas/post'
 
 export interface NavBarProps {
-  darkModeButton?: JSX.Element
+  data?: NavData
   height?: number
-  isMenuOpen?: boolean
-  onMenuToggle?: () => void
 }
 
 export interface NavData {
-  title: string
+  title?: string
+  icon?: SanityImageSource
 }
 
 export const navDataQuery = `
     *[_type == 'settings']{
-      title
-    }
+      title,
+      icon
+    }[0]
   `
 
-async function getNavData() {
+export async function getNavData() {
   const navData: NavData = await client.fetch(navDataQuery)
   return navData
 }
 
 const NavBar = async ({
-  darkModeButton,
-  height = 70,
-  isMenuOpen = false,
-  onMenuToggle = () => { }
+  data,
+  height = 70
 }: NavBarProps) => {
-
-  const { title } = await getNavData()
+  const { title, icon } = data ?? {}
+  console.log(icon)
 
   return (
     <div className='flex justify-center'>
@@ -45,8 +45,16 @@ const NavBar = async ({
       >
         <Link href="/" >
           <div className="flex items-center mx-2">
-            <div className="flex items-center mx-2">
-              <GiAstronautHelmet size={20} />
+            <div className="relative w-[70px] h-[70px] overflow-hidden flex items-center mx-2">
+              {icon &&
+                <Image
+                  src={urlFor(icon).height(800).width(800).url()}
+                  alt={'logo'}
+                  fill={true}
+                  priority={true}
+                  style={{ objectFit: 'cover' }}
+                />
+              }
             </div>
             <div className="font-semibold text-xl">
               {title &&
@@ -55,20 +63,15 @@ const NavBar = async ({
                 </div>
               }
               {!title &&
-                <div>
+                <div className='border border-red-400 border-opacity-50'>
                   Site Title
                 </div>
-
               }
-
             </div>
           </div>
         </Link>
         <div className="hidden grow sm:flex mx-6">
           navitems
-        </div>
-        <div className="hidden sm:flex mr-4">
-          {darkModeButton}
         </div>
 
         <div className="static grow sm:hidden flex items-center justify-end mr-4">

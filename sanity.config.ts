@@ -9,6 +9,9 @@ import { apiVersion, dataset, projectId } from './sanity/env'
 import { schema } from './sanity/schema'
 import { defaultDocumentNode } from './sanity/desk-tool/defaultDocumentNode'
 import deskStructure from './sanity/desk-tool/deskStructure'
+import { noteField } from 'sanity-plugin-note-field'
+import SlugExample from './sanity/custom-components/SlugExample'
+import { colorInput } from '@sanity/color-input'
 
 export default defineConfig({
   basePath: '/studio',
@@ -21,5 +24,15 @@ export default defineConfig({
       structure: deskStructure
     }),
     visionTool({ defaultApiVersion: apiVersion }),
+    noteField(),
+    colorInput(),
   ],
+  form: {
+    components: {
+      field: (props) => {
+        if (props.name === 'slug') return SlugExample(props)
+        return props.renderDefault(props)
+      }
+    }
+  }
 })

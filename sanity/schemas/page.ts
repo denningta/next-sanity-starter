@@ -1,3 +1,4 @@
+import { GiInfo } from "react-icons/gi";
 import { defineField, defineType } from "sanity";
 
 export default defineType({

@@ -1,6 +1,6 @@
-import { GiSettingsKnobs } from "react-icons/gi";
+import { GiGlobe, GiHomeGarage, GiHouse, GiJapaneseBridge, GiPaper, GiSettingsKnobs } from "react-icons/gi";
 import Iframe from "sanity-plugin-iframe-pane";
-import { StructureResolver } from "sanity/desk";
+import { DocumentListBuilder, StructureResolver } from "sanity/desk";
 import { baseUrl } from "../env";
 
 const deskStructure: StructureResolver = (S) =>
@@ -25,8 +25,33 @@ const deskStructure: StructureResolver = (S) =>
                 .title('Preview')
             ])
         ),
-      // Add a visual divider (optional)
       S.divider(),
+      S.listItem()
+        .title('Pages')
+        .icon(GiGlobe)
+        .child(
+          S.list()
+            .title('Pages')
+            .items([
+              S.listItem()
+                .title('Root Landing Page')
+                .icon(GiHouse)
+                .child(
+                  S.document()
+                    .schemaType('rootPage')
+                    .documentId('root')
+                    .title('Root Landing Page')
+                ),
+              S.listItem()
+                .title('Pages')
+                .icon(GiJapaneseBridge)
+                .child(
+                  S.documentTypeList('page')
+                )
+            ])
+        ),
+
+
       // List out the rest of the document types, but filter out the config type
       ...S.documentTypeListItems()
         .filter(listItem => !['settings'].includes(listItem.getId() ?? ''))
